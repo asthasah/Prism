@@ -1,0 +1,52 @@
+<style>
+    /* Custom Toggle Switch Style */
+    .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #7b2cbf; }
+    input:checked + .slider:before { transform: translateX(20px); }
+</style>
+
+<div id="settingsModal" class="modal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 9999;">
+    <div class="modal-content" style="background: #1e1e1e; padding: 25px; border-radius: 20px; width: 320px; color: white; border: 1px solid #333; font-family: sans-serif;">
+        
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3 style="margin:0; font-size: 1.3rem;">Settings</h3>
+            <span onclick="closeSettingsModal()" style="cursor: pointer; font-size: 1.5rem; color: #aaa;">&times;</span>
+        </div>
+
+        <!-- Preferences -->
+        <div style="margin-bottom: 25px;">
+            <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">⚙️ Preferences</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <span>Auto Save Notes</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <span>Notifications</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <span>Compact Mode</span>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <span>Spell Check</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <!-- Account -->
+        <div style="margin-bottom: 25px;">
+            <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">🔑 Account</p>
+            <div style="color: #8b85ff; margin-bottom: 12px; cursor: pointer;">Change Password</div>
+            <div style="color: #ff6b6b; cursor: pointer;">🗑️ Delete Account</div>
+        </div>
+
+        <!-- Save Button -->
+        <button onclick="closeSettingsModal()" style="width: 100%; padding: 12px; background: #7b2cbf; border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer;">Save Changes</button>
+    </div>
+</div>

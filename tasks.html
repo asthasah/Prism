@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prism - Tasks</title>
+    <!-- Icons ke liye link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!--Common Navbar -->
+    <nav class="top-nav">
+        <div class="logo">
+            <h1>Prism</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="tasks.html">Tasks</a></li>
+            <li><a href="expenses.html">Expenses</a></li>
+            <li><a href="calculator.html">Calculator</a></li>
+        </ul>
+    </nav>
+
+    <main class="content-container">
+        <!-- Section ki max-width thodi badha di hai taaki cards aur notes clean lagein -->
+        <section class="card task-section" style="max-width: 600px; margin: 0 auto;">
+            <h2>📝Task Manager</h2>
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Write a new task, Astha...">
+                <button onclick="addTask()">Add</button>
+            </div>
+            
+            <!-- Dynamic List Container (Bilkul Empty) -->
+            <ul class="task-list" id="taskList"></ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

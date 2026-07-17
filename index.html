@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prism - Unifying Your Daily Workflow</title>
+    <!-- For the link icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!--Common Navbar -->
+    <nav class="top-nav">
+        <div class="logo">
+            <h1>Prism</h1>
+            <h2>Unifying your daily workflow!</h2>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
+            <li><a href="expenses.html">Expenses</a></li>
+            <li><a href="calculator.html">Calculator</a></li>
+        </ul>
+
+        <!-- Right Side Icons & Profile -->
+        <div class="nav-right">
+            <!-- Search Button -->
+            <button class="nav-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            
+            <!-- Notification Button -->
+            <button class="nav-icon-btn"><i class="fa-solid fa-bell"></i></button>
+            
+            <!-- User Profile Container -->
+            <div class="profile-container" onclick="toggleProfileDropdown(event)">
+                <div class="profile-avatar" id="navAvatarLetter">A</div>
+                
+                <!-- DROPDOWN MENU -->
+                <div class="profile-dropdown" id="dropdownMenu">
+                    <div class="dropdown-user-info">
+                        <h4 id="userDisplayName">Astha </h4>
+                        <p id="userDisplayEmail">asthasah51@gmail.com</p>
+                    </div>
+                    <hr>
+                    <a href="#" onclick="openProfileSettings(event)"><i class="fa-solid fa-user"></i> Profile</a>
+                    <a href="#" onclick="openSettingsModal()">
+                        <i class="fa-solid fa-gear"></i> Settings
+                    </a>
+                                        
+                    <hr>
+                    <a href="#" class="logout-btn" id="dropdownAuthBtn" onclick="handleProfileAuthAction(event)">
+                        <i id="authActionIcon" class="fa-solid fa-right-from-bracket"></i> <span id="authActionText">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--PREMIUM AUTH MODAL (Updated with Inline Forgot Password View) -->
+    <div id="customAuthModal" class="custom-modal-overlay" style="display: none;">
+        <div class="custom-modal-card">
+            <button class="modal-close-x" onclick="closeAuthModal()">&times;</button>
+            
+            <!-- Form Tabs Switcher -->
+            <div class="modal-tabs" id="modalTabsHeader">
+                <button id="modalTabLogin" class="modal-tab active" onclick="switchModalForm('login')">Login</button>
+                <button id="modalTabSignup" class="modal-tab" onclick="switchModalForm('signup')">Sign Up</button>
+            </div>
+
+            <!-- LOGIN VIEW -->
+            <form id="modalLoginForm" onsubmit="submitModalLogin(event)">
+                <div class="m-form-group">
+                    <label>Username</label>
+                    <input type="text" id="mLogUser" placeholder="Enter username..." required>
+                </div>
+                <div class="m-form-group">
+                    <label>Password</label>
+                    <input type="password" id="mLogPass" placeholder="Enter password..." required>
+                </div>
+                <!-- Forgot Password Link -->
+                <div class="forgot-wrapper">
+                    <a href="#" onclick="triggerForgotPasswordView(event)">Forgot Password?</a>
+                </div>
+                <button type="submit" class="m-submit-btn">Sign In</button>
+            </form>
+
+            <!-- SIGNUP VIEW -->
+            <form id="modalSignupForm" onsubmit="submitModalSignup(event)" style="display: none;">
+                <div class="m-form-group">
+                    <label>Create Username</label>
+                    <input type="text" id="mSignUser" placeholder="Your username..." required>
+                </div>
+                <div class="m-form-group">
+                    <label>Create Password</label>
+                    <input type="password" id="mSignPass" placeholder="Create new password..." required>
+                </div>
+                <button type="submit" class="m-submit-btn">Register</button>
+            </form>
+
+            <!-- FORGOT PASSWORD VIEW (NEW) -->
+            <form id="modalForgotForm" onsubmit="handlePasswordReset(event)" style="display: none;">
+                <h3 style="color: #deb0f7; margin-bottom: 15px; font-size: 1.1rem; text-align: center;">Reset Password</h3>
+                
+                <!-- Account Username Mapping -->
+                <div class="m-form-group">
+                    <label>Your Username</label>
+                    <input type="text" id="fUser" placeholder="Enter your username..." required>
+                </div>
+
+                <!-- Step A: Phone Input -->
+                <div class="m-form-group" id="phoneStep">
+                    <label>Enter Registered Phone Number</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="tel" id="fPhone" placeholder="Enter 10-digit number..." style="flex: 1;">
+                        <button type="button" class="m-submit-btn" onclick="sendMockOTP()" style="width: auto; padding: 0 12px; margin: 0; white-space: nowrap; font-size: 0.85rem;">Get OTP</button>
+                    </div>
+                </div>
+
+                <!-- Step B: OTP Input -->
+                <div class="m-form-group" id="otpStep" style="display: none;">
+                    <label>Enter Verification OTP</label>
+                    <input type="text" id="fOTP" placeholder="Enter the generated OTP...">
+                </div>
+
+                <!-- Step C: New Password Input -->
+                <div class="m-form-group" id="newPassStep" style="display: none;">
+                    <label>Create New Password</label>
+                    <input type="password" id="fNewPass" placeholder="Enter new password...">
+                </div>
+
+                <button type="submit" id="resetSubmitBtn" class="m-submit-btn" style="margin-top: 10px; display: none;">Update Password</button>
+                
+                <div class="forgot-wrapper" style="text-align: center; margin-top: 15px;">
+                    <a href="#" onclick="backToLoginFromForgot(event)">← Back to Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WIDE & TILTED CARDS -->
+        <main class="hero-wrapper" style="max-width: 1200px; margin: 0 auto; padding: 80px 40px; display: flex; align-items: center; justify-content: flex-start; min-height: calc(100vh - 100px);">
+            
+            <!-- Main Card Container-->
+            <div class="card welcome-card" style="background: rgba(25, 20, 35, 0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 50px; border-radius: 24px; max-width: 1050px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: space-between; gap: 40px; text-align: left;">
+                
+                <!-- Left Side: Content Box -->
+                <div style="flex: 1; min-width: 320px;">
+                    <!-- Main Title -->
+                        <h1>Welcome to Prism<br>
+                    <span style="font-size: 1.8rem; font-weight: 500; color: #bca5ff; display: block; margin-top: 5px;">Your Digital Workspace</span>
+                    </h1>
+                
+                <!-- Subtitle -->
+                <p style="font-size: 1.05rem; color: rgba(255, 255, 255, 0.9); font-weight: 500; margin-bottom: 12px;">
+                    Your beautiful personal productivity workspace.
+                </p>
+                
+                <!-- Description -->
+                <p id="welcomeSubtext" style="font-size: 0.88rem; color: rgba(255, 255, 255, 0.55); line-height: 1.6; margin-bottom: 30px;">
+                    A modern way to manage tasks, expenses, and calculations with a clean, glass-inspired interface.
+                </p>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 15px;">
+                    <a href="tasks.html" style="text-decoration: none; padding: 10px 24px; background: #9d4edd; color: white; font-weight: 600; font-size: 0.9rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); transition: 0.2s;">Get Started</a>
+                    <a href="expenses.html" style="text-decoration: none; padding: 10px 24px; background: rgba(255,255,255,0.08); color: white; font-weight: 500; font-size: 0.9rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); transition: 0.2s;">View Expenses</a>
+                </div>
+            </div>
+
+            <!-- Right Side: 3 Larger Horizontal Tilted Cards -->
+            <div style="flex: 1.5; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; min-width: 420px; position: relative; height: 320px;">
+                
+                <!-- Card 1: Tasks (Tilted Left) -->
+                <div style="width: 170px; height: 260px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); position: absolute; left: -10px; top: -20px; transform: rotate(-8deg); transition: 0.3s; z-index: 3;" onmouseover="this.style.transform='rotate(-8deg) scale(1.03)'" onmouseout="this.style.transform='rotate(-8deg)'">
+                    <div style="flex: 1; width: 100%; overflow: hidden;">
+                        <img src="https://thumbs.dreamstime.com/b/financial-planning-budget-management-illustration-woman-managing-finances-bills-calculator-expense-notes-cozy-417997399.jpg" alt="Tasks" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div style="background: rgba(40, 35, 55, 0.75); backdrop-filter: blur(5px); padding: 8px 0; text-align: center;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #77d439; letter-spacing: 0.5px;">Magical Tasks Pad</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Expenses (Center Bottom, Straight & Slight Tilt) -->
+                <div style="width: 170px; height: 260px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); position: absolute; center: 130px; top: 35px; transform: rotate(4deg); transition: 0.3s; z-index: 2;" onmouseover="this.style.transform='rotate(4deg) scale(1.05)'" onmouseout="this.style.transform='rotate(4deg)'">
+                    <div style="flex: 1; width: 100%; overflow: hidden;">
+                        <img src="https://t4.ftcdn.net/jpg/19/50/56/95/360_F_1950569509_JiR1ZRMatbIXEDVqnRslh3CI95qLWBYt.jpg" alt="Expenses" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div style="background: rgba(40, 35, 55, 0.75); backdrop-filter: blur(5px); padding: 8px 0; text-align: center;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #bca5ff; letter-spacing: 0.5px;">Need to manage your Expenses?</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Calculator (Tilted Right) -->
+                <div style="width: 170px; height: 260px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); position: absolute; right: -10px; top: -5px; transform: rotate(12deg); transition: 0.3s; z-index: 1;" onmouseover="this.style.transform='rotate(12deg) scale(1.05)'" onmouseout="this.style.transform='rotate(12deg)'">
+                    <div style="flex: 1; width: 100%; overflow: hidden;">
+                        <img src="https://img.freepik.com/premium-vector/woman-is-holding-calculator-pointing-number-153_864013-4591.jpg" alt="Calculator" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div style="background: rgba(40, 35, 55, 0.75); backdrop-filter: blur(5px); padding: 8px 0; text-align: center;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #dac106; letter-spacing: 0.5px;">NO worries! <br> Your Math Buddy is here! </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+    
+
+    <script src="settings.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

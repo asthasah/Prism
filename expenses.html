@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prism - Expenses</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Common Navbar -->
+    <nav class="top-nav">
+        <div class="logo">
+            <h1>Prism</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
+            <li class="active"><a href="expenses.html">Expenses</a></li>
+            <li><a href="calculator.html">Calculator</a></li>
+        </ul>
+    </nav>
+
+    <main class="content-container">
+        <section class="card expense-section">
+            <h2>💰 Expense Tracker</h2>
+            <div class="input-group">
+                <input type="text" id="expenseName" placeholder="Item name...">
+                <input type="number" id="expenseAmount" placeholder="Amount...">
+                <button onclick="addExpense()">Add</button>
+            </div>
+            
+            <!-- Clean Total Spent Display -->
+            <div style="margin-top: 15px; font-weight: 600; font-size: 1.1rem; color: #ffffff;">
+                Total Spent: <span id="totalSpentDisplay" style="color: #bca5ff;">₹0</span>
+            </div>
+
+            <!-- Dynamic Expense List Grid Container -->
+            <div id="expenseList" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto;">
+                <!--the items will be added below-->
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+
+</body>
+</html>

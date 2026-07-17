@@ -1,0 +1,467 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    /* Sundar Cloud/Anime Background Image */
+    background: linear-gradient(rgba(10, 15, 30, 0.5), rgba(10, 15, 30, 0.5)), 
+                url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1920') no-repeat center center fixed;
+    background-size: cover;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Navbar */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 15px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo h1 {
+    color: #9d4edd;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links li.active a {
+    color: #9d4edd;
+    text-shadow: 0 0 10px rgba(157, 78, 221, 0.6);
+}
+
+/* Navbar Right Side (Icons, Profile, Dropdown) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+}
+
+/* User Profile Container */
+.profile-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+    background: #9d4edd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dropdown Menu (Default Hidden) */
+.profile-dropdown {
+    display: none; /* JS se handle hoga click par */
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: rgba(20, 20, 35, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    width: 250px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 100;
+}
+
+/* Dropdown open karne ke liye active class helper */
+.profile-dropdown.show {
+    display: block;
+}
+
+.dropdown-user-info {
+    margin-bottom: 10px;
+}
+
+.dropdown-user-info h4 {
+    color: white;
+    font-size: 1rem;
+}
+
+.dropdown-user-info p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.profile-dropdown hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 10px 0;
+}
+
+.profile-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.profile-dropdown a:hover {
+    background: rgba(157, 78, 221, 0.2);
+    color: white;
+}
+
+.profile-dropdown a.logout-btn {
+    color: #ff4d4d;
+}
+
+.profile-dropdown a.logout-btn:hover {
+    background: rgba(255, 77, 77, 0.1);
+}
+
+/* Content Layout (Glassmorphism Cards) */
+.content-container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Inputs & Buttons Custom Styling */
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+input {
+    flex: 1;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+input:focus {
+    border-color: #9d4edd;
+}
+
+button {
+    padding: 12px 24px;
+    background-color: #9d4edd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #7b2cbf;
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+}
+/* Calculator Page specific size limit */
+.calc-section {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.calc-display {
+    background-color: #d5e3f1;
+    color: #000000;            /* Isse numbers black color mein dikhenge */
+    font-size: 2.5rem;
+    text-align: right;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.calc-buttons button {
+    background-color: #91b6dc;
+    color: #333;
+    font-size: 1.3rem;
+    height: 60px;
+}
+
+.calc-buttons button:hover {
+    background-color: #306090;
+}
+
+/*--------------------------------------------------------------------------*/
+/*  STYLISH GLASS TASK CARDS & STICKY NOTES  */
+
+/* Bullet points hatane ke liye */
+.task-list {
+    list-style-type: none !important;
+    padding: 0 !important;
+    margin-top: 25px;
+}
+
+/* Har task ka premium capsule container */
+.task-item-container {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.task-item-container:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #91b6dc;
+}
+
+/* Task ke andar Text aur Buttons ka alignment */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+}
+
+.task-text {
+    font-size: 1.05rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Action buttons group */
+.task-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Individual modern button styles */
+.btn-action {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #ffffff;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* Button hovers */
+.btn-edit:hover { background-color: #deb0f7; color: #1a1a1a; }
+.btn-note:hover { background-color: #fef08a; color: #1a1a1a; } /* Sticky Note Yellow */
+.btn-del:hover { background-color: #f87171; color: #ffffff; }
+
+/* Sticky Notes Text Area Styling */
+.sticky-note-area {
+    display: none; /* Default me hidden rahega jab tak toggle na ho */
+    background: rgba(254, 240, 138, 0.12); /* Yellow highlighter transparent tint */
+    border-top: 1px dashed rgba(255, 255, 255, 0.15);
+    padding: 12px 18px;
+}
+
+.sticky-note-area textarea {
+    width: 100%;
+    min-height: 80px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fef08a; /* Soft sticky yellow text color */
+    font-family: 'Courier New', Courier, monospace; /* Notes wali handwriting feel */
+    font-size: 0.95rem;
+    resize: vertical;
+}
+
+.sticky-note-area textarea::placeholder {
+    color: rgba(254, 240, 138, 0.4);
+}
+
+/*--------------------------------------------------------------------------*/
+/* GLASS-AUTH MODAL STYLING  */
+
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px); /* Piche ka area dhundla ho jayega */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-modal-card {
+    background: rgba(23, 23, 31, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    position: relative;
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close-x {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 24px;
+    cursor: pointer;
+}
+.modal-close-x:hover { color: white; }
+
+.modal-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-tab {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.1rem;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+}
+
+.modal-tab.active {
+    color: #deb0f7;
+}
+.modal-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #deb0f7;
+}
+
+.m-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.m-form-group label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.m-form-group input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: white;
+    outline: none;
+}
+.m-form-group input:focus { border-color: #deb0f7; }
+
+.forgot-wrapper {
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 20px;
+}
+
+.forgot-wrapper a {
+    color: #91b6dc;
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+.forgot-wrapper a:hover { text-decoration: underline; }
+
+.m-submit-btn {
+    background: #91b6dc;
+    color: #1a1a1a;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.m-submit-btn:hover { background: #deb0f7; }
