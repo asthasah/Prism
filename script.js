@@ -301,7 +301,24 @@ function checkUserSession() {
         if (welcomeHeading) welcomeHeading.innerText = "🌈 Welcome to Prism";
     }
 }
-function openProfileSettings(event) { event.preventDefault(); alert("Profile configs loading..."); }
+
+//for profile settings modal on
+function openProfileSettings(event) {
+    event.preventDefault();
+    const modal = document.getElementById("profileModal"); 
+    if (modal) {
+        modal.style.display = "flex"; 
+    }
+} 
+// Modal band karne ke liye off
+function closeProfileModal() {
+    const modal = document.getElementById("profileModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+
 function openGeneralSettings(event) { event.preventDefault(); alert("General space loading..."); }
 
 // ==========================================
@@ -394,3 +411,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+//for profile settings
+function openProfileSettings(event) { 
+    event.preventDefault(); 
+    document.getElementById("profileModal").style.display = "flex"; 
+}
+
+function closeProfileModal() {
+    document.getElementById("profileModal").style.display = "none";
+}
