@@ -278,25 +278,32 @@ function handlePasswordReset(event) {
 function checkUserSession() {
     const currentUser = localStorage.getItem("currentUser");
     
+    //new elements that we created
+    const authButtons = document.getElementById("authButtonsContainer");
+    const profileContainer = document.getElementById("userProfileContainer");
+    
+    // old one
     const nameLabel = document.getElementById("userDisplayName");
     const emailLabel = document.getElementById("userDisplayEmail");
-    const authText = document.getElementById("authActionText");
-    const authIcon = document.getElementById("authActionIcon");
     const avatarLetter = document.getElementById("navAvatarLetter");
     const welcomeHeading = document.getElementById("welcomeHeading");
 
     if (currentUser) {
+        // User Logged In hai
+        if (authButtons) authButtons.style.display = "none";
+        if (profileContainer) profileContainer.style.display = "flex";
+
         if (nameLabel) nameLabel.innerText = currentUser;
         if (emailLabel) emailLabel.innerText = `${currentUser.toLowerCase()}@gmail.com`;
-        if (authText) authText.innerText = "Logout";
-        if (authIcon) authIcon.className = "fa-solid fa-right-from-bracket"; 
         if (avatarLetter) avatarLetter.innerText = currentUser.charAt(0).toUpperCase();
         if (welcomeHeading) welcomeHeading.innerText = `🚀 Active Workspace: ${currentUser}`;
     } else {
+        // User is Guest (if not Logged in)
+        if (authButtons) authButtons.style.display = "flex";
+        if (profileContainer) profileContainer.style.display = "none";
+
         if (nameLabel) nameLabel.innerText = "Guest User";
         if (emailLabel) emailLabel.innerText = "Please login to sync workspace";
-        if (authText) authText.innerText = "Login / Sign Up";
-        if (authIcon) authIcon.className = "fa-solid fa-right-to-bracket"; 
         if (avatarLetter) avatarLetter.innerText = "?";
         if (welcomeHeading) welcomeHeading.innerText = "🌈 Welcome to Prism";
     }

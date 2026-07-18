@@ -24,15 +24,19 @@
         </ul>
 
         <!-- Right Side Icons & Profile -->
-        <div class="nav-right">
-            <!-- Search Button -->
+                <div class="nav-right">
             <button class="nav-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            
-            <!-- Notification Button -->
             <button class="nav-icon-btn"><i class="fa-solid fa-bell"></i></button>
+
+            <!-- Ye naye buttons hain jo login se pehle dikhenge -->
+            <div id="authButtonsContainer" style="display: flex; gap: 10px;">
+                <button class="nav-btn" onclick="document.getElementById('customAuthModal').style.display='flex'">Login</button>
+                <button class="nav-btn-signup" onclick="document.getElementById('customAuthModal').style.display='flex'">Sign Up</button>
+            </div>
+
             
             <!-- User Profile Container -->
-            <div class="profile-container" onclick="toggleProfileDropdown(event)">
+            <div class="profile-container" id="userProfileContainer" onclick="toggleProfileDropdown(event)">
                 <div class="profile-avatar" id="navAvatarLetter">A</div>
                 
                 <!-- DROPDOWN MENU -->
@@ -45,8 +49,8 @@
                     <a href="#" onclick="openProfileSettings(event)"><i class="fa-solid fa-user"></i> Profile</a>
                     <a href="#" onclick="openSettingsModal()">
                         <i class="fa-solid fa-gear"></i> Settings
-                    </a>
-                                        
+                    </a> 
+                    
                     <hr>
                     <a href="#" class="logout-btn" id="dropdownAuthBtn" onclick="handleProfileAuthAction(event)">
                         <i id="authActionIcon" class="fa-solid fa-right-from-bracket"></i> <span id="authActionText">Logout</span>
@@ -204,7 +208,7 @@
 
         </div>
     </main>
-    
+
     <!----------------------------------------------------------------------Profile Modal------------------------------------>
 <div id="profileModal" class="custom-modal-overlay" style="display: none;">
     <div class="custom-modal-card">
