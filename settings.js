@@ -1,5 +1,3 @@
-// settings.js
-
 async function openSettingsModal() {
     if (!document.getElementById("settingsModal")) {
         try {

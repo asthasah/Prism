@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prism - Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome icons ke liye agar zaroorat ho toh icons properly dikhenge -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -22,8 +24,15 @@
     </nav>
 
     <main class="content-container">
-        <section class="card calc-section">
-            <h2>🧮 Mini Calculator</h2>
+        <!-- Calculator Section par position: relative add kiya hai taaki history popup sirf isi card ke andar khule -->
+        <section class="card calc-section" style="position: relative; overflow: hidden;">
+            
+            <!-- Header jisme Mini Calculator aur side mein History ka link hai -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;"> Mini Calculator</h2>
+                <span onclick="toggleCalcHistory()" style="color: #bca5ff; cursor: pointer; font-size: 0.95rem; font-style: italic; font-weight: 500;">History</span>
+            </div>
+
             <div class="calc-display" id="display">0</div>
             <div class="calc-buttons">
                 <button>C</button><button>/</button><button>*</button><button>-</button>
@@ -32,9 +41,31 @@
                 <button>1</button><button>2</button><button>3</button>
                 <button class="zero-btn">0</button><button>.</button>
             </div>
+            
+            <!-- Calculator History Overlay (Jo "History" click karne par ishi card ke upar khulega) -->
+            <div id="calcHistoryOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a2e; z-index: 50; padding: 20px; box-sizing: border-box; flex-direction: column;">
+                
+                <!-- Overlay Header (Back arrow, Title aur Dustbin Icon) -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="toggleCalcHistory()" style="background: none; border: none; color: #fff; font-size: 1rem; cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+                        <span style="font-size: 1.05rem; font-weight: 600; color: #fff;">History</span>
+                    </div>
+                    <!-- Dustbin Delete Button -->
+                    <button onclick="clearCalcHistory()" style="background: none; border: none; color: #ff6b6b; font-size: 1.1rem; cursor: pointer;" title="Clear History"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                
+                <!-- History Cards List -->
+                <div id="calcHistoryList" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 2px;">
+                    <!-- History cards yahan dynamically load honge -->
+                </div>
+            </div>
+
         </section>
     </main>
+
     <script src="script.js"></script>
+    <script src="storage.js"></script>
 
 </body>
 </html>

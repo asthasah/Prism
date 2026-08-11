@@ -9,7 +9,7 @@
 }
 
 body {
-    /* Sundar Cloud/Anime Background Image */
+    /*Cloud/Anime Background Image */
     background: linear-gradient(rgba(10, 15, 30, 0.5), rgba(10, 15, 30, 0.5)), 
                 url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1920') no-repeat center center fixed;
     background-size: cover;
@@ -218,6 +218,7 @@ button:hover {
     background-color: #7b2cbf;
     box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
 }
+
 /* Calculator Page specific size limit */
 .calc-section {
     max-width: 450px;
@@ -226,7 +227,7 @@ button:hover {
 
 .calc-display {
     background-color: #d5e3f1;
-    color: #000000;            /* Isse numbers black color mein dikhenge */
+    color: #000000;           
     font-size: 2.5rem;
     text-align: right;
     padding: 15px;
@@ -251,10 +252,8 @@ button:hover {
     background-color: #306090;
 }
 
-/*--------------------------------------------------------------------------*/
-/*  STYLISH GLASS TASK CARDS & STICKY NOTES  */
 
-/* Bullet points hatane ke liye */
+/*  STYLISH GLASS TASK CARDS & STICKY NOTES  */
 .task-list {
     list-style-type: none !important;
     padding: 0 !important;

@@ -12,43 +12,42 @@ function addTask() {
         return;
     }
 
-    // New <li> element stylish class ke sath banana
     const li = document.createElement('li');
     li.className = 'task-item-container';
     
-    // New elements ka complete dynamic setup
     li.innerHTML = `
         <div class="task-header">
             <span class="task-text">${taskText}</span>
             <div class="task-actions">
-                <!-- Edit button -->
                 <button class="btn-action btn-edit" onclick="editTask(this)" title="Edit Task Name">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
-                <!-- Sticky Note Toggle button -->
                 <button class="btn-action btn-note" onclick="toggleNote(this)" title="Toggle Notes">
                     <i class="fa-solid fa-note-sticky"></i>
                 </button>
-                <!-- Delete button -->
                 <button class="btn-action btn-del" onclick="deleteTask(this)" title="Delete Task">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
         </div>
-        <!-- Sticky Note Slide Section -->
         <div class="sticky-note-area">
             <textarea placeholder="✍️ Write notes, links, or quick steps for this task here..."></textarea>
         </div>
     `;
 
     taskList.appendChild(li);
+    saveTask(taskText);
     taskInput.value = "";
 }
 
-//For Task 1,2,3
-// 1. Smoothly individual task delete karne ke liye
 function deleteTask(button) {
     const taskItem = button.closest('.task-item-container');
+    const taskText = taskItem.querySelector('.task-text').innerText;
+    
+    let savedTasks = JSON.parse(localStorage.getItem('prismTasks')) || [];
+    savedTasks = savedTasks.filter(t => t !== taskText);
+    localStorage.setItem('prismTasks', JSON.stringify(savedTasks));
+
     taskItem.style.opacity = '0';
     taskItem.style.transform = 'translateY(10px)';
     setTimeout(() => {
@@ -56,7 +55,6 @@ function deleteTask(button) {
     }, 200);
 }
 
-// 2. Sticky Notes toggle karne ke liye
 function toggleNote(button) {
     const taskItem = button.closest('.task-item-container');
     const noteArea = taskItem.querySelector('.sticky-note-area');
@@ -65,11 +63,10 @@ function toggleNote(button) {
         noteArea.style.display = 'none';
     } else {
         noteArea.style.display = 'block';
-        noteArea.querySelector('textarea').focus(); // Auto focus on textarea
+        noteArea.querySelector('textarea').focus();
     }
 }
 
-// 3. Task text edit (update) karne ke liye
 function editTask(button) {
     const taskItem = button.closest('.task-item-container');
     const taskTextSpan = taskItem.querySelector('.task-text');
@@ -82,13 +79,14 @@ function editTask(button) {
     }
 }
 
-//DROPDOWN & MODAL AUTH LOGIC
-let generatedOTP = null; // OTP temporarily memory me store karne ke liye
+
+// DROPDOWN & MODAL AUTH LOGIC
+let generatedOTP = null; 
 document.addEventListener("DOMContentLoaded", () => {
     checkUserSession();
+    renderExpenses(); // Page load hote hi expenses dikhane ke liye
 });
 
-// Dropdown Menu Toggler
 function toggleProfileDropdown(event) {
     event.stopPropagation();
     const dropdown = document.getElementById("dropdownMenu");
@@ -97,7 +95,6 @@ function toggleProfileDropdown(event) {
     }
 }
 
-// Bahar click karne pe dropdown menu close handle karna
 window.addEventListener("click", () => {
     const dropdown = document.getElementById("dropdownMenu");
     if (dropdown && dropdown.style.display === "block") {
@@ -105,7 +102,6 @@ window.addEventListener("click", () => {
     }
 });
 
-// "Login / Sign Up" ya Logout option button pe click karne ka flow
 function handleProfileAuthAction(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -113,24 +109,19 @@ function handleProfileAuthAction(event) {
     const currentUser = localStorage.getItem("currentUser");
 
     if (currentUser) {
-        // Logout verification
         if (confirm("Hi Astha, do you really want to Logout?")) {
             localStorage.removeItem("currentUser");
             alert("Logged out successfully!");
             checkUserSession();
         }
     } else {
-        // modal display karna!
         document.getElementById("customAuthModal").style.display = "flex";
-        backToLoginFromForgot(event); // Default state login hi rakhega jab open hoga
+        backToLoginFromForgot(event);
     }
     
-    // Hide dropdown instantly
     document.getElementById("dropdownMenu").style.display = "none";
 }
 
-
-// Modal tab switcher between Login and Signup
 function switchModalForm(target) {
     const logForm = document.getElementById("modalLoginForm");
     const signForm = document.getElementById("modalSignupForm");
@@ -150,12 +141,10 @@ function switchModalForm(target) {
     }
 }
 
-// Close Modal Action
 function closeAuthModal() {
     document.getElementById("customAuthModal").style.display = "none";
 }
 
-//SIGN UP TRIGGER
 function submitModalSignup(event) {
     event.preventDefault();
     const user = document.getElementById("mSignUser").value.trim();
@@ -168,7 +157,6 @@ function submitModalSignup(event) {
         return;
     }
 
-    // Save database record locally
     users[user] = pass;
     localStorage.setItem("prismUsers", JSON.stringify(users));
 
@@ -180,7 +168,6 @@ function submitModalSignup(event) {
     checkUserSession();
 }
 
-//LOGIN TRIGGER
 function submitModalLogin(event) {
     event.preventDefault();
     const user = document.getElementById("mLogUser").value.trim();
@@ -198,14 +185,11 @@ function submitModalLogin(event) {
     }
 }
 
-//1.FORGOT PASSWORD VIEW (Login layout ko hide karke reset form dikhayega)
 function triggerForgotPasswordView(event) {
     event.preventDefault();
-    
     document.getElementById("modalLoginForm").style.display = "none";
     document.getElementById("modalSignupForm").style.display = "none";
     document.getElementById("modalTabsHeader").style.display = "none";
-    
     document.getElementById("modalForgotForm").style.display = "block";
     document.getElementById("phoneStep").style.display = "block";
     document.getElementById("otpStep").style.display = "none";
@@ -214,7 +198,6 @@ function triggerForgotPasswordView(event) {
     document.getElementById("modalForgotForm").reset();
 }
 
-//2.FORGOT FORM SE WAPAS LOGIN PAR JAANE KE LIYE
 function backToLoginFromForgot(event) {
     if (event) event.preventDefault();
     document.getElementById("modalForgotForm").style.display = "none";
@@ -222,7 +205,6 @@ function backToLoginFromForgot(event) {
     switchModalForm('login');
 }
 
-//3.DYNAMIC SIMULATED OTP SENDER ENGINE
 function sendMockOTP() {
     const phone = document.getElementById("fPhone").value.trim();
     if (phone.length < 10) {
@@ -230,19 +212,14 @@ function sendMockOTP() {
         return;
     }
 
-    //4.digit random OTP code generator
     generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
-    
-    // Developer system simulator notification text
     alert(`🔑 PRISM SECURITY Verification Token:\nYour OTP verification code is: ${generatedOTP}`);
     
-    // Chhupe hue elements ko seamlessly show kar dena
     document.getElementById("otpStep").style.display = "block";
     document.getElementById("newPassStep").style.display = "block";
     document.getElementById("resetSubmitBtn").style.display = "block";
 }
 
-//5.NEW PASSWORD UPDATE ENGINE
 function handlePasswordReset(event) {
     event.preventDefault();
     const searchUser = document.getElementById("fUser").value.trim();
@@ -266,7 +243,6 @@ function handlePasswordReset(event) {
         return;
     }
     
-    //6.Update data locally
     users[searchUser] = newPassword;
     localStorage.setItem("prismUsers", JSON.stringify(users));
 
@@ -274,34 +250,25 @@ function handlePasswordReset(event) {
     backToLoginFromForgot(event);
 }
 
-// Dynamic session compiler interface updates
 function checkUserSession() {
     const currentUser = localStorage.getItem("currentUser");
-    
-    //new elements that we created
     const authButtons = document.getElementById("authButtonsContainer");
     const profileContainer = document.getElementById("userProfileContainer");
-    
-    // old one
     const nameLabel = document.getElementById("userDisplayName");
     const emailLabel = document.getElementById("userDisplayEmail");
     const avatarLetter = document.getElementById("navAvatarLetter");
     const welcomeHeading = document.getElementById("welcomeHeading");
 
     if (currentUser) {
-        // User Logged In hai
         if (authButtons) authButtons.style.display = "none";
         if (profileContainer) profileContainer.style.display = "flex";
-
         if (nameLabel) nameLabel.innerText = currentUser;
         if (emailLabel) emailLabel.innerText = `${currentUser.toLowerCase()}@gmail.com`;
         if (avatarLetter) avatarLetter.innerText = currentUser.charAt(0).toUpperCase();
         if (welcomeHeading) welcomeHeading.innerText = `🚀 Active Workspace: ${currentUser}`;
     } else {
-        // User is Guest (if not Logged in)
         if (authButtons) authButtons.style.display = "flex";
         if (profileContainer) profileContainer.style.display = "none";
-
         if (nameLabel) nameLabel.innerText = "Guest User";
         if (emailLabel) emailLabel.innerText = "Please login to sync workspace";
         if (avatarLetter) avatarLetter.innerText = "?";
@@ -309,37 +276,23 @@ function checkUserSession() {
     }
 }
 
-//for profile settings modal on
-function openProfileSettings(event) {
-    event.preventDefault();
-    const modal = document.getElementById("profileModal"); 
-    if (modal) {
-        modal.style.display = "flex"; 
-    }
-} 
-// Modal band karne ke liye off
-function closeProfileModal() {
-    const modal = document.getElementById("profileModal");
-    if (modal) {
-        modal.style.display = "none";
-    }
+function openProfileSettings(event) { 
+    event.preventDefault(); 
+    document.getElementById("profileModal").style.display = "flex"; 
 }
 
+function closeProfileModal() {
+    document.getElementById("profileModal").style.display = "none";
+}
 
 function openGeneralSettings(event) { event.preventDefault(); alert("General space loading..."); }
 
-// ==========================================
-// PRISM PAGES ROUTER ENGINE
 
-let totalSpentAmount = 0;
-
-// 1.Expenses Page Logic
+// ---------------------------------------------Expenses Page Logic (Fixed & Perfect)---------------------------------------------
 function addExpense() {
     const nameInput = document.getElementById("expenseName");
     const amountInput = document.getElementById("expenseAmount");
-    const listContainer = document.getElementById("expenseList");
-    const totalDisplay = document.getElementById("totalSpentDisplay");
-
+    
     if (!nameInput || !amountInput) return;
 
     const itemName = nameInput.value.trim();
@@ -350,35 +303,70 @@ function addExpense() {
         return;
     }
 
-    // Total Update
-    totalSpentAmount += amount;
-    if (totalDisplay) {
-        totalDisplay.innerText = `₹${totalSpentAmount}`;
-    }
+    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
+    expenses.push({ name: itemName, amount: amount });
+    localStorage.setItem('prismExpenses', JSON.stringify(expenses));
 
-    // List Row Addition (Niche Name aur Money laane ke liye)
-    if (listContainer) {
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.justify = "space-between";
-        row.style.background = "rgba(255, 255, 255, 0.06)";
-        row.style.padding = "10px 14px";
-        row.style.borderRadius = "10px";
-        row.style.border = "1px solid rgba(255, 255, 255, 0.1)";
-        row.style.color = "#ffffff";
-        row.style.fontSize = "0.95rem";
-        
-        row.innerHTML = `<span> ${itemName}</span> <span style="font-weight: 600; color: #bca5ff;">₹${amount}</span>`;
-        listContainer.appendChild(row);
-    }
-
-    // Input reset
     nameInput.value = "";
     amountInput.value = "";
+    renderExpenses();
 }
 
-// 2. Calculator Page Logic (Ultra Safe Initializer)
+function renderExpenses() {
+    const listContainer = document.getElementById("expenseList");
+    const totalDisplay = document.getElementById("totalSpentDisplay");
+    
+    if (!listContainer) return;
+
+    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
+    let total = 0;
+    listContainer.innerHTML = "";
+    
+    // Scrollable container styling taaki bohot saare items hone par scroll ho sake
+    listContainer.style.maxHeight = "220px";
+    listContainer.style.overflowY = "auto";
+    listContainer.style.paddingRight = "4px";
+
+    expenses.forEach((exp, index) => {
+        total += Number(exp.amount);
+        
+        const row = document.createElement("div");
+        // Sabhi styling inline kar di hai taaki text aur card bilkul clear dikhein
+        row.style.marginBottom = "8px";
+        row.style.padding = "12px 16px";
+        row.style.background = "rgba(255, 255, 255, 0.08)";
+        row.style.border = "1px solid rgba(255, 255, 255, 0.15)";
+        row.style.borderRadius = "12px";
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        
+        row.innerHTML = `
+            <span style="color: #ffffff; font-weight: 500; font-size: 1rem;">${exp.name}</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-weight: 600; color: #bca5ff; font-size: 1.05rem;">₹${exp.amount}</span>
+                <button onclick="deleteExpense(${index})" title="Delete Expense" style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-trash" style="color: #ffffff !important; font-size: 14px;"></i>
+                </button>
+            </div>
+        `;
+        listContainer.appendChild(row);
+    });
+    
+    if (totalDisplay) {
+        totalDisplay.innerText = `₹${total}`;
+    }
+}
+
+function deleteExpense(index) {
+    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
+    expenses.splice(index, 1);
+    localStorage.setItem('prismExpenses', JSON.stringify(expenses));
+    renderExpenses();
+}
+
+
+// Calculator Page Logic
 document.addEventListener("DOMContentLoaded", () => {
     if (window.location.pathname.includes("calculator.html")) {
         const display = document.getElementById("display");
@@ -386,7 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let calcInputString = "";
 
         if (calcButtonsContainer && display) {
-            // Target only actual button elements to avoid layout click override
             calcButtonsContainer.addEventListener("click", (e) => {
                 if (e.target.tagName !== "BUTTON") return;
                 
@@ -398,9 +385,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else if (val === '=') {
                     try {
                         if (calcInputString !== "") {
-                            // Direct mathematical operations eval bypassing styling blocks
                             let result = eval(calcInputString.replace(/[^0-9+\-*/.]/g, ''));
                             display.innerText = result;
+                            saveCalc(calcInputString, result);
                             calcInputString = result.toString();
                         }
                     } catch (err) {
@@ -419,12 +406,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-//for profile settings
-function openProfileSettings(event) { 
-    event.preventDefault(); 
-    document.getElementById("profileModal").style.display = "flex"; 
+
+// Search bar functionality
+const searchInput = document.querySelector('#search-input'); 
+const searchResultsContainer = document.querySelector('#search-results'); 
+
+if (searchInput) {
+    searchInput.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+        
+        if (!query) {
+            if (searchResultsContainer) searchResultsContainer.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/search?q=${query}`);
+            const data = await response.json();
+
+            if (searchResultsContainer) {
+                searchResultsContainer.innerHTML = data.map(item => `
+                    <div class="search-item">
+                        <span>${item.title}</span>
+                        <small>(${item.type})</small>
+                    </div>
+                `).join('');
+            }
+        } catch (err) {
+            console.error("Search error:", err);
+        }
+    });
 }
 
-function closeProfileModal() {
-    document.getElementById("profileModal").style.display = "none";
+function toggleCalcHistory() {
+    const overlay = document.getElementById('calcHistoryOverlay');
+    if (overlay) {
+        if (overlay.style.display === 'flex') {
+            overlay.style.display = 'none';
+        } else {
+            overlay.style.display = 'flex';
+            renderCalcHistory();
+        }
+    }
+}
+
+function clearCalcHistory() {
+    if (confirm("Clear all history, Astha?")) {
+        localStorage.removeItem('prismCalcHistory');
+        renderCalcHistory();
+    }
 }

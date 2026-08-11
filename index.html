@@ -7,6 +7,7 @@
     <!-- For the link icons-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
 
@@ -25,8 +26,9 @@
 
         <!-- Right Side Icons & Profile -->
                 <div class="nav-right">
-            <button class="nav-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="nav-icon-btn"><i class="fa-solid fa-bell"></i></button>
+            <!-- <button class="nav-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button> -->
+            <button class="nav-icon-btn" id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <!-- <button class="nav-icon-btn"><i class="fa-solid fa-bell"></i></button> -->
 
             <!-- Ye naye buttons hain jo login se pehle dikhenge -->
             <div id="authButtonsContainer" style="display: flex; gap: 10px;">
@@ -166,8 +168,8 @@
                 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 15px;">
-                    <a href="tasks.html" style="text-decoration: none; padding: 10px 24px; background: #9d4edd; color: white; font-weight: 600; font-size: 0.9rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); transition: 0.2s;">Get Started</a>
-                    <a href="expenses.html" style="text-decoration: none; padding: 10px 24px; background: rgba(255,255,255,0.08); color: white; font-weight: 500; font-size: 0.9rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); transition: 0.2s;">View Expenses</a>
+                    <button onclick="document.getElementById('customAuthModal').style.display='flex'; switchModalForm('signup'); return false;" style="text-decoration: none; padding: 10px 24px; background: #9d4edd; color: white; font-weight: 600; font-size: 0.9rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); transition: 0.2s;">Get Started</a>
+                    <button onclick="window.location.href='expenses.html'" style="text-decoration: none; padding: 10px 24px; background: rgba(255,255,255,0.08); color: white; font-weight: 500; font-size: 0.9rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; transition: 0.2s;">Explore Now</button>
                 </div>
             </div>
 
@@ -229,8 +231,23 @@
         <button class="m-submit-btn" onclick="closeProfileModal()">Save Changes</button>
     </div>
 </div>
-    
+    <!-- Search Modal Overlay -->
+<div id="search-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: flex-start; padding-top: 100px;">
+    <div style="background: #1e192d; border: 1px solid rgba(255,255,255,0.15); width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="display: flex; align-items: center; border-bottom: 2px solid #7c3aed; padding-bottom: 8px;">
+            <i class="fa-solid fa-magnifying-glass" style="color: #a78bfa; margin-right: 12px; font-size: 1.1rem;"></i>
+            <input type="text" id="modal-search-input" placeholder="Search tasks, expenses, reminders..." style="background: transparent; border: none; outline: none; color: white; font-size: 1rem; width: 100%;">
+            <button id="close-search-modal" style="background: transparent; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 1rem;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="modal-search-results" style="margin-top: 15px; max-height: 250px; overflow-y: auto;">
+            <div style="color: rgba(255,255,255,0.4); text-align: center; padding: 20px; font-size: 0.9rem;">Type something to search from database...</div>
+        </div>
+    </div>
+</div>
 
+
+    <script src="storage.js"></script>
+    <script src="search.js"></script>
     <script src="settings.js"></script>
     <script src="script.js"></script>
 </body>
