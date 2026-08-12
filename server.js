@@ -6,7 +6,7 @@ const pool = require('./db');
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Root URL par index.html bhejane ke liye
 app.get('/', (req, res) => {
