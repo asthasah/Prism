@@ -125,4 +125,10 @@ app.delete('/api/expenses/:id', async (req, res) => {
 
 // Server Listen
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Vercel ke liye app export karna zaroori hai, local ke liye app.listen
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
