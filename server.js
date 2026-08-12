@@ -27,18 +27,30 @@ app.get('/api/search', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Get all tasks / notes (GET) - Email filter ke sath
+app.get('/api/tasks', async (req, res) => {
+    try {
+        const { email } = req.query;
+        let result;
+        if (email) {
+            result = await pool.query('SELECT * FROM notes WHERE user_email = $1 ORDER BY id DESC', [email]);
+        } else {
+            result = await pool.query('SELECT * FROM notes ORDER BY id DESC');
+        }
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
 
-
-
-// Save Task Route
+// Save Task Route (POST) - Email ke sath save hoga
 app.post('/api/tasks', async (req, res) => {
     try {
-        const { title } = req.body;
+        const { title, email } = req.body;
         const newNote = await pool.query(
-            "INSERT INTO notes (title) VALUES ($1) RETURNING *",
-            [title]
+            "INSERT INTO notes (title, user_email) VALUES ($1, $2) RETURNING *",
+            [title, email]
         );
         res.json(newNote.rows[0]);
     } catch (err) {
@@ -47,13 +59,44 @@ app.post('/api/tasks', async (req, res) => {
     }
 });
 
-// Save Expense Route
+// Delete Task/Note Route (DELETE)
+app.delete('/api/tasks/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM notes WHERE id = $1', [id]);
+        res.json({ message: "Task deleted successfully" });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// --- EXPENSES ROUTES ---
+
+// 1. Get all expenses (GET) - Email filter ke sath
+app.get('/api/expenses', async (req, res) => {
+    try {
+        const { email } = req.query;
+        let result;
+        if (email) {
+            result = await pool.query('SELECT * FROM expenses WHERE user_email = $1 ORDER BY id DESC', [email]);
+        } else {
+            result = await pool.query('SELECT * FROM expenses ORDER BY id DESC');
+        }
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// 2. Save new expense (POST) - Email ke sath save hoga
 app.post('/api/expenses', async (req, res) => {
     try {
-        const { title, amount } = req.body;
+        const { title, amount, email } = req.body;
         const newExpense = await pool.query(
-            "INSERT INTO expenses (title, amount) VALUES ($1, $2) RETURNING *",
-            [title, amount]
+            "INSERT INTO expenses (title, amount, user_email) VALUES ($1, $2, $3) RETURNING *",
+            [title, amount, email]
         );
         res.json(newExpense.rows[0]);
     } catch (err) {
@@ -61,3 +104,19 @@ app.post('/api/expenses', async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
+// 3. Delete expense (DELETE)
+app.delete('/api/expenses/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM expenses WHERE id = $1', [id]);
+        res.json({ message: "Expense deleted successfully" });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// Server Listen
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

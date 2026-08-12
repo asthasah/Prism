@@ -1,5 +1,5 @@
-// TASK MANAGER LOGIC (For tasks.html)
-function addTask() {
+// TASK MANAGER LOGIC (for Neon DB)
+async function addTask() {
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskList');
     
@@ -12,47 +12,71 @@ function addTask() {
         return;
     }
 
-    const li = document.createElement('li');
-    li.className = 'task-item-container';
-    
-    li.innerHTML = `
-        <div class="task-header">
-            <span class="task-text">${taskText}</span>
-            <div class="task-actions">
-                <button class="btn-action btn-edit" onclick="editTask(this)" title="Edit Task Name">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button class="btn-action btn-note" onclick="toggleNote(this)" title="Toggle Notes">
-                    <i class="fa-solid fa-note-sticky"></i>
-                </button>
-                <button class="btn-action btn-del" onclick="deleteTask(this)" title="Delete Task">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </div>
-        </div>
-        <div class="sticky-note-area">
-            <textarea placeholder="✍️ Write notes, links, or quick steps for this task here..."></textarea>
-        </div>
-    `;
+    try {
+        // Backend API ko task save karne ke liye request bhejna
+        const response = await fetch('http://localhost:3000/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: taskText })
+        });
 
-    taskList.appendChild(li);
-    saveTask(taskText);
-    taskInput.value = "";
+        if (!response.ok) throw new Error("Failed to save task");
+
+        const savedTask = await response.json();
+
+        // UI par task dikhana
+        const li = document.createElement('li');
+        li.className = 'task-item-container';
+        
+        li.innerHTML = `
+            <div class="task-header">
+                <span class="task-text">${savedTask.title}</span>
+                <div class="task-actions">
+                    <button class="btn-action btn-edit" onclick="editTask(this)" title="Edit Task Name">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button class="btn-action btn-note" onclick="toggleNote(this)" title="Toggle Notes">
+                        <i class="fa-solid fa-note-sticky"></i>
+                    </button>
+                    <button class="btn-action btn-del" onclick="deleteTask(this)" title="Delete Task">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="sticky-note-area">
+                <textarea placeholder="✍️ Write notes, links, or quick steps for this task here..."></textarea>
+            </div>
+        `;
+
+        taskList.appendChild(li);
+        taskInput.value = "";
+    } catch (err) {
+        console.error("Error saving task:", err);
+        alert("Server error while saving task!");
+    }
 }
 
-function deleteTask(button) {
+async function deleteTask(button) {
     const taskItem = button.closest('.task-item-container');
-    const taskText = taskItem.querySelector('.task-text').innerText;
+    const taskId = taskItem.getAttribute('data-id'); // Database wali id
     
-    let savedTasks = JSON.parse(localStorage.getItem('prismTasks')) || [];
-    savedTasks = savedTasks.filter(t => t !== taskText);
-    localStorage.setItem('prismTasks', JSON.stringify(savedTasks));
-
-    taskItem.style.opacity = '0';
-    taskItem.style.transform = 'translateY(10px)';
-    setTimeout(() => {
-        taskItem.remove();
-    }, 200);
+    try {
+        // Agar database ki id hai toh server se delete karenge
+        if (taskId) {
+            await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+                method: 'DELETE'
+            });
+        }
+        
+        taskItem.style.opacity = '0';
+        taskItem.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            taskItem.remove();
+        }, 200);
+    } catch (err) {
+        console.error("Error deleting task:", err);
+        alert("Server error while deleting task!");
+    }
 }
 
 function toggleNote(button) {
@@ -288,8 +312,8 @@ function closeProfileModal() {
 function openGeneralSettings(event) { event.preventDefault(); alert("General space loading..."); }
 
 
-// ---------------------------------------------Expenses Page Logic (Fixed & Perfect)---------------------------------------------
-function addExpense() {
+// ---------------------------------------Expenses Page Logic (Connected with Neon DB)-------------------------------
+async function addExpense() {
     const nameInput = document.getElementById("expenseName");
     const amountInput = document.getElementById("expenseAmount");
     
@@ -303,70 +327,131 @@ function addExpense() {
         return;
     }
 
-    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
-    expenses.push({ name: itemName, amount: amount });
-    localStorage.setItem('prismExpenses', JSON.stringify(expenses));
+    try {
+        const response = await fetch('http://localhost:3000/api/expenses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: itemName, amount: amount })
+        });
 
-    nameInput.value = "";
-    amountInput.value = "";
-    renderExpenses();
+        if (!response.ok) throw new Error("Failed to save expense");
+
+        nameInput.value = "";
+        amountInput.value = "";
+        renderExpenses(); // Database se fetch karke list refresh kar rahe ha 
+    } catch (err) {
+        console.error("Error saving expense:", err);
+        alert("Server error while saving expense!");
+    }
 }
 
-function renderExpenses() {
+async function renderExpenses() {
     const listContainer = document.getElementById("expenseList");
     const totalDisplay = document.getElementById("totalSpentDisplay");
     
     if (!listContainer) return;
 
-    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
-    let total = 0;
-    listContainer.innerHTML = "";
-    
-    // Scrollable container styling taaki bohot saare items hone par scroll ho sake
-    listContainer.style.maxHeight = "220px";
-    listContainer.style.overflowY = "auto";
-    listContainer.style.paddingRight = "4px";
+    try {
+        const response = await fetch('http://localhost:3000/api/expenses');
+        const expenses = await response.json();
 
-    expenses.forEach((exp, index) => {
-        total += Number(exp.amount);
+        let total = 0;
+        listContainer.innerHTML = "";
         
-        const row = document.createElement("div");
-        // Sabhi styling inline kar di hai taaki text aur card bilkul clear dikhein
-        row.style.marginBottom = "8px";
-        row.style.padding = "12px 16px";
-        row.style.background = "rgba(255, 255, 255, 0.08)";
-        row.style.border = "1px solid rgba(255, 255, 255, 0.15)";
-        row.style.borderRadius = "12px";
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.alignItems = "center";
+        listContainer.style.maxHeight = "220px";
+        listContainer.style.overflowY = "auto";
+        listContainer.style.paddingRight = "4px";
+
+        expenses.forEach((exp) => {
+            total += Number(exp.amount);
+            
+            const row = document.createElement("div");
+            row.style.marginBottom = "8px";
+            row.style.padding = "12px 16px";
+            row.style.background = "rgba(255, 255, 255, 0.08)";
+            row.style.border = "1px solid rgba(255, 255, 255, 0.15)";
+            row.style.borderRadius = "12px";
+            row.style.display = "flex";
+            row.style.justifyContent = "space-between";
+            row.style.alignItems = "center";
+            
+            row.innerHTML = `
+                <span style="color: #ffffff; font-weight: 500; font-size: 1rem;">${exp.title}</span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-weight: 600; color: #bca5ff; font-size: 1.05rem;">₹${exp.amount}</span>
+                    <button onclick="deleteExpense(${exp.id})" title="Delete Expense" style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-trash" style="color: #ffffff !important; font-size: 14px;"></i>
+                    </button>
+                </div>
+            `;
+            listContainer.appendChild(row);
+        });
         
-        row.innerHTML = `
-            <span style="color: #ffffff; font-weight: 500; font-size: 1rem;">${exp.name}</span>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-weight: 600; color: #bca5ff; font-size: 1.05rem;">₹${exp.amount}</span>
-                <button onclick="deleteExpense(${index})" title="Delete Expense" style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    <i class="fa-solid fa-trash" style="color: #ffffff !important; font-size: 14px;"></i>
-                </button>
-            </div>
-        `;
-        listContainer.appendChild(row);
-    });
-    
-    if (totalDisplay) {
-        totalDisplay.innerText = `₹${total}`;
+        if (totalDisplay) {
+            totalDisplay.innerText = `₹${total}`;
+        }
+    } catch (err) {
+        console.error("Error loading expenses:", err);
     }
 }
 
-function deleteExpense(index) {
-    let expenses = JSON.parse(localStorage.getItem('prismExpenses')) || [];
-    expenses.splice(index, 1);
-    localStorage.setItem('prismExpenses', JSON.stringify(expenses));
-    renderExpenses();
+async function deleteExpense(id) {
+    try {
+        await fetch(`http://localhost:3000/api/expenses/${id}`, {
+            method: 'DELETE'
+        });
+        renderExpenses();
+    } catch (err) {
+        console.error("Error deleting expense:", err);
+    }
 }
 
 
-// Calculator Page Logic
+// Calculator Page Logic & History Functions
+function saveCalc(expression, result) {
+    let history = JSON.parse(localStorage.getItem('prismCalcHistory')) || [];
+    history.unshift({ expression, result, time: new Date().toLocaleTimeString() });
+    if (history.length > 20) history.pop(); // Sirf last 20 history rakhein
+    localStorage.setItem('prismCalcHistory', JSON.stringify(history));
+}
+
+function renderCalcHistory() {
+    const historyContainer = document.getElementById("calcHistoryList"); // Jahan history dikhti hai
+    if (!historyContainer) return;
+    
+    let history = JSON.parse(localStorage.getItem('prismCalcHistory')) || [];
+    if (history.length === 0) {
+        historyContainer.innerHTML = "<p style='color: #aaa; text-align: center; padding: 10px;'>No history found</p>";
+        return;
+    }
+
+    historyContainer.innerHTML = history.map(item => `
+        <div style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; color: #fff;">
+            <span>${item.expression} = <strong>${item.result}</strong></span>
+            <small style="color: #a29bfe;">${item.time}</small>
+        </div>
+    `).join('');
+}
+
+function toggleCalcHistory() {
+    const overlay = document.getElementById('calcHistoryOverlay');
+    if (overlay) {
+        if (overlay.style.display === 'flex') {
+            overlay.style.display = 'none';
+        } else {
+            overlay.style.display = 'flex';
+            renderCalcHistory();
+        }
+    }
+}
+
+function clearCalcHistory() {
+    if (confirm("Clear all history, Astha?")) {
+        localStorage.removeItem('prismCalcHistory');
+        renderCalcHistory();
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (window.location.pathname.includes("calculator.html")) {
         const display = document.getElementById("display");
@@ -426,9 +511,9 @@ if (searchInput) {
 
             if (searchResultsContainer) {
                 searchResultsContainer.innerHTML = data.map(item => `
-                    <div class="search-item">
+                    <div class="search-item" style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
                         <span>${item.title}</span>
-                        <small>(${item.type})</small>
+                        <small style="float: right;">(${item.type})</small>
                     </div>
                 `).join('');
             }
@@ -436,23 +521,4 @@ if (searchInput) {
             console.error("Search error:", err);
         }
     });
-}
-
-function toggleCalcHistory() {
-    const overlay = document.getElementById('calcHistoryOverlay');
-    if (overlay) {
-        if (overlay.style.display === 'flex') {
-            overlay.style.display = 'none';
-        } else {
-            overlay.style.display = 'flex';
-            renderCalcHistory();
-        }
-    }
-}
-
-function clearCalcHistory() {
-    if (confirm("Clear all history, Astha?")) {
-        localStorage.removeItem('prismCalcHistory');
-        renderCalcHistory();
-    }
 }
