@@ -315,7 +315,7 @@ http://localhost:3000
 
 # ☁️ Profile Image Storage
 
-Memozi uses **Cloudinary** for persistent profile image storage.
+Prism uses **Cloudinary** for persistent profile image storage.
 
 When a user uploads a profile picture:
 
@@ -355,7 +355,7 @@ Using Cloudinary ensures that profile pictures remain available even when the ba
 
 # 🔐 Security
 
-Memozi uses several security mechanisms:
+Prism uses several security mechanisms:
 
 - 🔑 JWT authentication
 - 🔒 bcrypt password hashing
@@ -377,7 +377,7 @@ CLOUDINARY_API_SECRET
 
 # 🌍 Deployment
 
-Memozi is deployed using multiple cloud services.
+Prism is deployed using multiple cloud services.
 
 | Service | Platform |
 |---|---|
@@ -388,17 +388,17 @@ Memozi is deployed using multiple cloud services.
 
 ### 🌐 Frontend
 
-https://memozi-project.vercel.app/
+https://prism-project.vercel.app/
 
 ### ⚙️ Backend
 
-https://memozi-backend.onrender.com
+https://prism-backend.onrender.com
 
 ---
 
 # 🔄 Deployment Workflow
 
-Memozi is connected to GitHub.
+Prism is connected to GitHub.
 
 After making changes:
 
